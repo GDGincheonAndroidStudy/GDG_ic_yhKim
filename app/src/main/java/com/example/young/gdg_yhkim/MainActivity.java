@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
@@ -11,9 +13,11 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
+
     private final String strSeoul = "seoul";
     private final String strBeijing = "beijing";
     private final String strChicago = "chicago";
@@ -21,11 +25,13 @@ public class MainActivity extends AppCompatActivity {
     private final String strLondon = "london";
     private String strCurCity = "seoul";
 
+    RecyclerView rvWeather;
+    WeatherListAdapter mWeatherListAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        getWeather(strCurCity);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -38,6 +44,13 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        rvWeather = (RecyclerView)findViewById(R.id.recyclerView_weather);
+        mWeatherListAdapter = new WeatherListAdapter(this);
+        rvWeather.setLayoutManager(new LinearLayoutManager(this));
+        rvWeather.setAdapter(mWeatherListAdapter);
+
+        getWeather(strCurCity);
     }
 
     @Override
@@ -77,20 +90,11 @@ public class MainActivity extends AppCompatActivity {
 
         // 날씨를 읽어오는 API 호출
         OpenWeatherAPITask t = new OpenWeatherAPITask();
+
         try {
-            Weather w = t.execute(strCity).get();
+            ArrayList<Weather> weatherArrayList = t.execute(strCity).get();
 
-            String temperature = String.valueOf(w.getTemprature());
-
-            ((TextView) findViewById(R.id.tvCityName)).setText(strCity);
-            ((TextView) findViewById(R.id.tvTemp)).setText(temperature);
-            ((TextView) findViewById(R.id.tvLat)).setText(String.valueOf(w.getLat()));
-            ((TextView) findViewById(R.id.tvIon)).setText(String.valueOf(w.getIon()));
-            ((TextView) findViewById(R.id.tvPres)).setText(String.valueOf(w.getPres()));
-            ((TextView) findViewById(R.id.tvHumidity)).setText(String.valueOf(w.getHumidity()));
-            ((TextView) findViewById(R.id.tvTempMax)).setText(String.valueOf(w.getTempMax()));
-            ((TextView) findViewById(R.id.tvTempMin)).setText(String.valueOf(w.getTempMin()));
-            ((TextView) findViewById(R.id.tvCityName)).setText(strCity);
+            mWeatherListAdapter.setWeatherArrayList(weatherArrayList);
 
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -98,4 +102,6 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
+
 }
