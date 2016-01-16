@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">GDG_yhKim</string>
+    <string name="action_seoul">Seoul</string>
+    <string name="action_beijing">Beijing</string>
+    <string name="action_chicago">Chicago</string>
+    <string name="action_dubai">Dubai</string>
+    <string name="action_london">london</string>
+
+</resources>

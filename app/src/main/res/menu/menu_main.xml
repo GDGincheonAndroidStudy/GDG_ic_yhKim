@@ -1,0 +1,30 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.young.gdg_yhkim.MainActivity">
+    <item
+        android:id="@+id/action_Seoul"
+        android:orderInCategory="100"
+        android:title="@string/action_seoul"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_London"
+        android:orderInCategory="200"
+        android:title="@string/action_london"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_Beijing"
+        android:orderInCategory="300"
+        android:title="@string/action_beijing"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_Chicago"
+        android:orderInCategory="400"
+        android:title="@string/action_chicago"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_Dubai"
+        android:orderInCategory="500"
+        android:title="@string/action_dubai"
+        app:showAsAction="never" />
+</menu>
