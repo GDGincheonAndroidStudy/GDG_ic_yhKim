@@ -1,6 +1,6 @@
 package com.example.young.gdg_yhkim.API;
 
-import com.example.young.gdg_yhkim.Weather;
+import com.example.young.gdg_yhkim.Model.WeatherInfo;
 
 import retrofit.Call;
 import retrofit.http.GET;
@@ -14,5 +14,5 @@ public interface WeatherRetroService {
 //    List<Weather> listWeather(@Path("city") String city);
 
     @GET("/users/{city}")
-    Call<Weather> getCity(@Path("city") String city);
+    Call<WeatherInfo> getWeather(@Path("city") String city);
 }

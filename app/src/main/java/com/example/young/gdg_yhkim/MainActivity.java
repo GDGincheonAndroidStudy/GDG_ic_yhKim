@@ -65,7 +65,9 @@ public class MainActivity extends AppCompatActivity {
         } else if (id == R.id.action_London) {
             strCurCity = strLondon;
         }
-        getWeather(strCurCity);
+
+        new OpenWeatherAPIClient_retro().getWeather(strCurCity);
+        //getWeather(strCurCity);
 
         return super.onOptionsItemSelected(item);
     }
