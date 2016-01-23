@@ -20,6 +20,37 @@ public class OpenWeatherAPIClient {
     final static String openWeatherURL = "http://api.openweathermap.org/data/2.5/weather";
 
     public Weather getWeather(String strCity) {
+        //retrofit 적용
+  /*      String urlString = openWeatherURL + "?q=" + strCity + "&appid=" + APP_ID;
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(urlString)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        WeatherRetroService weatherService = retrofit.create(WeatherRetroService.class);
+        Call call = weatherService.getCity(strCity);
+        call.enqueue(new Callback<WeatherInfo>() {
+            @Override
+            public void onResponse(Response<WeatherInfo> response) {
+                WeatherInfo model = response.body();
+
+                if (model==null) {
+                    //404 or the response cannot be converted to City
+                    ResponseBody responseBody = response.errorBody();
+                    //error Exception
+                } else {
+                    //200
+                    return model;
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+            }
+        });
+        return null;*/
+
+        //기존방식
         Weather w = new Weather();
         String urlString = openWeatherURL + "?q=" + strCity + "&appid=" + APP_ID;
 
@@ -105,3 +136,5 @@ public class OpenWeatherAPIClient {
 
     }
 }
+
+

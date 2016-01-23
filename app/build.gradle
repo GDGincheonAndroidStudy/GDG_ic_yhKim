@@ -10,6 +10,9 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+        //multiDexEnabled true
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
@@ -24,4 +27,28 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.android.support:design:23.1.1'
+
+    // Android JUnit Runner
+    //androidTestCompile 'com.android.support.test:runner:0.4.1'
+
+// JUnit4 Rules
+    androidTestCompile 'com.android.support.test:rules:0.4.1'
+
+// Espresso core
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
+// Espresso-contrib for DatePicker, RecyclerView, Drawer actions, Accessibility checks, CountingIdlingResource
+    //androidTestCompile 'com.android.support.test.espresso:espresso-contrib:2.2.1'
+// Espresso-web for WebView support
+    //androidTestCompile 'com.android.support.test.espresso:espresso-web:2.2.1'
+// Espresso-idling-resource for synchronization with background jobs
+    //androidTestCompile 'com.android.support.test.espresso:espresso-idling-resource:2.2.1'
+
+    androidTestCompile 'com.android.support:support-annotations:23.1.1'
+
+    //retrofit 적용
+    def retrofitVersion = '2.0.0-beta1'
+    compile "com.squareup.retrofit:retrofit:$retrofitVersion"
+    compile "com.squareup.retrofit:converter-gson:$retrofitVersion"
+
+
 }
