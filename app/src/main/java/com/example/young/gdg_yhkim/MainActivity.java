@@ -2,17 +2,32 @@ package com.example.young.gdg_yhkim;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.example.young.gdg_yhkim.Model.WeatherListData;
 
 import java.util.concurrent.ExecutionException;
 
-public class MainActivity extends AppCompatActivity {
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+    private final String LOG_TAG = MainActivity.class.getSimpleName();
+
     private final String strSeoul = "seoul";
     private final String strBeijing = "beijing";
     private final String strChicago = "chicago";
@@ -20,11 +35,22 @@ public class MainActivity extends AppCompatActivity {
     private final String strLondon = "london";
     private String strCurCity = "seoul";
 
+    @InjectView(R.id.main_drawer_view)
+    NavigationView navigationView;
+    @InjectView(R.id.drawer_layout)
+    DrawerLayout drawerLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        getWeather(strCurCity);
+        ButterKnife.inject(this);
+
+
+        //retrofit 적용전
+        //getWeather(strCurCity);
+
+        //retrofit 적용후
+        new NetworkRetrofit().request(callback, strCurCity);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -33,10 +59,31 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "coming soon", Snackbar.LENGTH_LONG)
+                new NetworkRetrofit().request(callback, strCurCity);
+                Snackbar.make(view, getString(R.string.refresh), Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
+
+        FloatingActionButton faSearch = (FloatingActionButton) findViewById(R.id.fbSearchCity);
+        faSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                AppCompatEditText acEtSearchCity = (AppCompatEditText)findViewById(R.id.etSearchCity);
+                String strSearchCity = acEtSearchCity.getText().toString().trim();
+                if(strSearchCity != null && strSearchCity.length() != 0)
+                {
+
+                    acEtSearchCity.setText("");
+                    new NetworkRetrofit().request(callback, strSearchCity);
+                    Snackbar.make(view, getString(R.string.refresh), Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
+            }
+        });
+
+        navigationView.setNavigationItemSelectedListener(this);
     }
 
     @Override
@@ -45,6 +92,40 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
+
+    @Override
+    public boolean onNavigationItemSelected(MenuItem menuItem) {
+        int id = menuItem.getItemId();
+
+        switch (id) {
+            case R.id.navi_group1_seoul:
+                strCurCity = strSeoul;
+                break;
+            case R.id.navi_group1_beijing:
+                strCurCity = strBeijing;
+                break;
+            case R.id.navi_group1_chicago:
+                strCurCity = strChicago;
+                break;
+            case R.id.navi_group1_dubai:
+                strCurCity = strDubai;
+                break;
+            case R.id.navi_group1_london:
+                strCurCity = strLondon;
+                break;
+        }
+
+        new NetworkRetrofit().request(callback, strCurCity);
+
+
+            drawerLayout.closeDrawers();
+            menuItem.setChecked(true);
+        return true;
+    }
+
+ /**
+  * 상단 Toolbar menu
+  **/
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -66,13 +147,56 @@ public class MainActivity extends AppCompatActivity {
             strCurCity = strLondon;
         }
 
-        new OpenWeatherAPIClient_retro().getWeather(strCurCity);
+        Log.e("CITYDATA : ", strCurCity);
+
+        //retrofit 적용전
         //getWeather(strCurCity);
+
+        //retrofit 적용후
+        new NetworkRetrofit().request(callback, strCurCity);
 
         return super.onOptionsItemSelected(item);
     }
 
 
+    private Callback callback = new Callback<WeatherListData>() {
+        @Override
+        public void onResponse(Response<WeatherListData> response) {
+            Log.d("Weather", "onResponse");
+            if(response.body().getCod() == 200){
+                weatherDataSet(response.body());
+            }else{
+                Toast.makeText(getApplication(),"Failed to read data",Toast.LENGTH_SHORT).show();
+            }
+
+        }
+
+        @Override
+        public void onFailure(Throwable t) {
+            Log.d("TEST", "onFailure");
+            Toast.makeText(getApplication(),"Failed to read data",Toast.LENGTH_SHORT).show();
+        }
+    };
+
+    private void weatherDataSet(WeatherListData  weatherdata){
+        WeatherListData w = weatherdata;
+        strCurCity = w.getName();
+        ((TextView) findViewById(R.id.tvCityName)).setText(w.getName());
+        ((TextView) findViewById(R.id.tvTemp)).setText(String.valueOf(w.getMain().getTemp()));
+        ((TextView) findViewById(R.id.tvLat)).setText(String.valueOf(w.getCoord().getLat()));
+        ((TextView) findViewById(R.id.tvIon)).setText(String.valueOf(w.getCoord().getLon()));
+        ((TextView) findViewById(R.id.tvPres)).setText(String.valueOf(w.getMain().getPressure()));
+        ((TextView) findViewById(R.id.tvHumidity)).setText(String.valueOf(w.getMain().getHumidity()));
+        ((TextView) findViewById(R.id.tvTempMax)).setText(String.valueOf(w.getMain().getTemp_max()));
+        ((TextView) findViewById(R.id.tvTempMin)).setText(String.valueOf(w.getMain().getTemp_min()));
+    }
+
+
+
+    /**
+     * ASynkTask 사용
+     * **/
+    //retro fit 적용전
     public void getWeather(String strCity) {
         strCurCity = strCity;
 
@@ -98,5 +222,7 @@ public class MainActivity extends AppCompatActivity {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
+
+
     }
 }

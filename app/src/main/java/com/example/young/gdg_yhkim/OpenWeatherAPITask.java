@@ -13,10 +13,8 @@ public class OpenWeatherAPITask extends AsyncTask<String, Void, Weather> {
 
         String strCity = params[0];
 
-
         // API 호출
         Weather w = client.getWeather(strCity);
-
 
         return w;
     }

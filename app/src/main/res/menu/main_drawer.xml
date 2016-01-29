@@ -1,0 +1,42 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MainActivity">
+    <group
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/navi_group1_seoul"
+            android:checked="true"
+            android:icon="@drawable/ic_android_black_24dp"
+            android:title="@string/action_seoul"/>
+        <item
+            android:id="@+id/navi_group1_beijing"
+            android:icon="@drawable/ic_android_black_24dp"
+            android:title="@string/action_beijing"/>
+        <item
+            android:id="@+id/navi_group1_chicago"
+            android:icon="@drawable/ic_android_black_24dp"
+            android:title="@string/action_chicago"/>
+        <item
+            android:id="@+id/navi_group1_dubai"
+            android:icon="@drawable/ic_android_black_24dp"
+            android:title="@string/action_dubai"/>
+        <item
+            android:id="@+id/navi_group1_london"
+            android:icon="@drawable/ic_android_black_24dp"
+            android:title="@string/action_london"/>
+    </group>
+    <item
+        android:id="@+id/navigation_subheader"
+        android:title="Sub Menu">
+        <menu>
+            <item
+                android:id="@+id/navigation_sub_item_1"
+                android:icon="@drawable/ic_android_black_24dp"
+                android:title="Coming soon"/>
+            <item
+                android:id="@+id/navigation_sub_item_2"
+                android:icon="@drawable/ic_android_black_24dp"
+                android:title="Coming soon"/>
+        </menu>
+    </item>
+</menu>
