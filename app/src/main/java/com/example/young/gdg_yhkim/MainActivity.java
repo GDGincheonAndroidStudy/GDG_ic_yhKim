@@ -113,7 +113,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
-        FloatingActionButton faAutoSearch = (FloatingActionButton) findViewById(R.id.fbAutoSearchCity);
+
+
+      /*  FloatingActionButton faAutoSearch = (FloatingActionButton) findViewById(R.id.fbAutoSearchCity);
         faSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -127,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             .setAction("Action", null).show();
                 }
             }
-        });
+        });*/
 
         navigationView.setNavigationItemSelectedListener(this);
     }
