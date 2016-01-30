@@ -9,6 +9,7 @@
     <string name="navigation_sub_item_1">subitem1</string>
     <string name="navigation_sub_item_2">subitem2</string>
     <string name="search_hint">City name</string>
-    <string name="refresh">Refresh the data.</string>
+    <string name="refresh">Refresh data.</string>
+    <string name="search_auto_hint">City name AutoComplete</string>
 
 </resources>

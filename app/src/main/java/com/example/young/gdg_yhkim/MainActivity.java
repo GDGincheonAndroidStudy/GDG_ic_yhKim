@@ -1,5 +1,6 @@
 package com.example.young.gdg_yhkim;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -12,15 +13,28 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.young.gdg_yhkim.Model.City;
 import com.example.young.gdg_yhkim.Model.WeatherListData;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import co.moonmonkeylabs.realmsearchview.RealmSearchAdapter;
+import co.moonmonkeylabs.realmsearchview.RealmSearchView;
+import co.moonmonkeylabs.realmsearchview.RealmSearchViewHolder;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import retrofit2.Callback;
 import retrofit2.Response;
 
@@ -35,15 +49,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private final String strLondon = "london";
     private String strCurCity = "seoul";
 
-    @InjectView(R.id.main_drawer_view)
+    @Bind(R.id.main_drawer_view)
     NavigationView navigationView;
-    @InjectView(R.id.drawer_layout)
+    //@InjectView
+    @Bind(R.id.drawer_layout)
     DrawerLayout drawerLayout;
+
+    //Realm
+    private RealmSearchView realmSearchView;
+    private CityRecyclerViewAdapter adapter;
+    private Realm realm;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ButterKnife.inject(this);
+        //ButterKnife.inject(this);
+        ButterKnife.bind(this);
+
+        //realm
+        resetRealm();
+        loadCityData();
+        realmSearchView = (RealmSearchView) findViewById(R.id.search_view);
+        realm = Realm.getInstance(this);
+        adapter = new CityRecyclerViewAdapter(this, realm, "engname");
+        realmSearchView.setAdapter(adapter);
 
 
         //retrofit 적용전
@@ -83,7 +113,52 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
+        FloatingActionButton faAutoSearch = (FloatingActionButton) findViewById(R.id.fbAutoSearchCity);
+        faSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                RealmSearchView autoSearchCity = (RealmSearchView)findViewById(R.id.search_view);
+                String strSearchCity = autoSearchCity.getSearchBarText().toString().trim();
+                if(strSearchCity != null && strSearchCity.length() != 0)
+                {
+                    new NetworkRetrofit().request(callback, strSearchCity);
+                    Snackbar.make(view, getString(R.string.refresh), Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
+            }
+        });
+
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    private void loadCityData() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonFactory jsonFactory = new JsonFactory();
+        try {
+            JsonParser jsonParserCity = jsonFactory.createParser(getResources().openRawResource(R.raw.world_city_b));
+            List<City> entries =
+                    objectMapper.readValue(jsonParserCity, new TypeReference<List<City>>() {
+            });
+
+            Realm realm = Realm.getInstance(this);
+            realm.beginTransaction();
+            realm.copyToRealm(entries);
+            realm.commitTransaction();
+            realm.close();
+
+        }catch (Exception e) {
+            e.printStackTrace();
+            throw new IllegalStateException("Could not load city data.");
+        }
+
+
+    }
+
+
+    private void resetRealm() {
+        RealmConfiguration realmConfig = new RealmConfiguration.Builder(this).deleteRealmIfMigrationNeeded().build();
+        Realm.deleteRealm(realmConfig);
     }
 
     @Override
@@ -156,6 +231,58 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         new NetworkRetrofit().request(callback, strCurCity);
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public class CityRecyclerViewAdapter extends RealmSearchAdapter<City,CityRecyclerViewAdapter.ViewHolder> {
+        public CityRecyclerViewAdapter(Context context, Realm realm, String filterColumnName){
+            super(context, realm, filterColumnName);
+        }
+        public class ViewHolder extends RealmSearchViewHolder {
+
+            private CityItemView cityItemView;
+
+            public ViewHolder(FrameLayout container, TextView footerTextView) {
+                super(container, footerTextView);
+            }
+
+            public ViewHolder(CityItemView cityItemView) {
+                super(cityItemView);
+                this.cityItemView = cityItemView;
+            }
+        }
+
+        @Override
+        public ViewHolder onCreateRealmViewHolder(ViewGroup viewGroup, int viewType) {
+            ViewHolder vh = new ViewHolder(new CityItemView(viewGroup.getContext()));
+            return vh;
+        }
+
+        @Override
+        public void onBindRealmViewHolder(ViewHolder viewHolder, int position) {
+            final City city = realmResults.get(position);
+            viewHolder.cityItemView.bind(city);
+        }
+
+        @Override
+        public ViewHolder onCreateFooterViewHolder(ViewGroup viewGroup) {
+            View v = inflater.inflate(R.layout.footer_view, viewGroup, false);
+            return new ViewHolder(
+                    (FrameLayout) v,
+                    (TextView) v.findViewById(R.id.footer_text_view));
+        }
+
+        @Override
+        public void onBindFooterViewHolder(ViewHolder holder, int position) {
+            super.onBindFooterViewHolder(holder, position);
+            holder.itemView.setOnClickListener(
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                        }
+                    }
+            );
+        }
+
     }
 
 

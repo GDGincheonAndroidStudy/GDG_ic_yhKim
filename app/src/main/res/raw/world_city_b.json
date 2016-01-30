@@ -1,0 +1,117 @@
+[
+  {
+    "engname": "seoul",
+    "korname": "서울",
+    "country": "Korea"
+  },
+  {
+    "engname": "Amsterdam",
+    "korname": "암스테르담",
+    "country": "none"
+  },
+  {
+    "engname": "Athens",
+    "korname": "아테네",
+    "country": "none"
+  },
+  {
+    "engname": "Baghdad",
+    "korname": "바그다드",
+    "country": "none"
+  },
+  {
+    "engname": "Bangkok",
+    "korname": "방콕",
+    "country": "none"
+  },
+  {
+    "engname": "Barcelona",
+    "korname": "바르셀로나",
+    "country": "none"
+  },
+  {
+    "engname": "Belgrade",
+    "korname": "베오그라드",
+    "country": "none"
+  },
+  {
+    "engname": "Berlin",
+    "korname": "베를린",
+    "country": "none"
+  },
+  {
+    "engname": "Bratislava",
+    "korname": "브라티슬라바",
+    "country": "none"
+  },
+  {
+    "engname": "Bogota",
+    "korname": "보고타",
+    "country": "none"
+  },
+  {
+    "engname": "Bratislava",
+    "korname": "브라티슬라바",
+    "country": "none"
+  },
+  {
+    "engname": "Brussels",
+    "korname": "브뤼셀",
+    "country": "none"
+  },
+  {
+    "engname": "Cairo",
+    "korname": "카이로",
+    "country": "none"
+  },
+  {
+    "engname": "Cape Town",
+    "korname": "케이프 타운",
+    "country": "none"
+  },
+  {
+    "engname": "Dhaka",
+    "korname": "다카",
+    "country": "none"
+  },
+  {
+    "engname": "Frankfurt",
+    "korname": "프랑크푸르트",
+    "country": "none"
+  },
+  {
+    "engname": "Geneva",
+    "korname": "제네바",
+    "country": ""
+  },
+  {
+    "engname": "The Hague",
+    "korname": "헤이그",
+    "country": "none"
+  },
+  {
+    "engname": "Istanbul",
+    "korname": "이스탄불",
+    "country": "none"
+  },
+  {
+    "engname": "Jakarta",
+    "korname": "자카르타",
+    "country": "none"
+  },
+  {
+    "engname": "Kabul",
+    "korname": "카불",
+    "country": "none"
+  },
+  {
+    "engname": "Lagos",
+    "korname": "라고스",
+    "country": "none"
+  },
+  {
+    "engname": "Madrid",
+    "korname": "마드리드",
+    "country": "none"
+  }
+]
